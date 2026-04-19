@@ -25,11 +25,6 @@ if [ "${ARG_INSTALL}" = "true" ]; then
     curl -fsSL https://forgecode.dev/install.sh | bash -s -- --version "${ARG_FORGE_VERSION}"
   fi
   echo "Forge installed"
-
-  # Ensure .local/bin is in PATH for forge
-  if [ -f "$HOME/.local/bin/forge" ]; then
-    export PATH="$HOME/.local/bin:$PATH"
-  fi
 else
   echo "Skipping Forge installation"
 fi
