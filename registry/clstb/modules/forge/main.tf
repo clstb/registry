@@ -71,6 +71,31 @@ variable "subdomain" {
   default     = false
 }
 
+variable "openai_url" {
+  type        = string
+  description = "The OpenAI compatible API URL for Forge."
+  default     = "https://ai.clstb.sh/v1"
+}
+
+variable "api_key" {
+  type        = string
+  description = "The API key for the OpenAI compatible endpoint."
+  default     = "sk-dummy"
+  sensitive   = true
+}
+
+variable "model_id" {
+  type        = string
+  description = "The model ID for Forge to use."
+  default     = "gemini-3-flash"
+}
+
+variable "services_url" {
+  type        = string
+  description = "The services URL for Forge."
+  default     = "https://api.forgecode.dev/"
+}
+
 variable "pre_install_script" {
   type        = string
   description = "Custom script to run before installing Forge."
@@ -121,6 +146,10 @@ module "agentapi" {
 
     ARG_INSTALL='${var.install_forge}' \
     ARG_FORGE_VERSION='${var.forge_version}' \
+    ARG_OPENAI_URL='${var.openai_url}' \
+    ARG_API_KEY='${var.api_key}' \
+    ARG_MODEL_ID='${var.model_id}' \
+    ARG_SERVICES_URL='${var.services_url}' \
     /tmp/install.sh
   EOT
 }
