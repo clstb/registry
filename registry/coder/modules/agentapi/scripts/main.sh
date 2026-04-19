@@ -89,7 +89,7 @@ if [ "${INSTALL_AGENTAPI}" = "true" ]; then
     -o /tmp/agentapi \
     "$download_url"
   chmod +x /tmp/agentapi
-  sudo mv /tmp/agentapi /usr/local/bin/agentapi || (mkdir -p "$HOME/.local/bin" && mv /tmp/agentapi "$HOME/.local/bin/agentapi" && export PATH="$HOME/.local/bin:$PATH")
+  sudo mv /tmp/agentapi /usr/local/bin/agentapi || (mkdir -p "$HOME/.local/bin" && mv /tmp/agentapi "$HOME/.local/bin/agentapi")
 fi
 if ! command_exists agentapi && [ ! -f "$HOME/.local/bin/agentapi" ]; then
   echo "Error: AgentAPI is not installed. Please enable install_agentapi or install it manually."
