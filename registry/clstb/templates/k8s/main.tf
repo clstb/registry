@@ -337,23 +337,8 @@ resource "coder_agent" "main" {
     # Pre-populate known_hosts for internal Git server
     mkdir -p ~/.ssh
     echo "src.clstb.sh ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBADpQKAwOCtkmgkehoGopPy573Rxd81Yxw6CODK9pOZ" >> ~/.ssh/known_hosts
-
-    # Install bun if not present
-    if ! command -v bun >/dev/null 2>&1; then
-      echo "Installing bun..."
-      curl -fsSL https://bun.sh/install | bash
-    fi
-
-    # Symlink bun to ~/.local/bin so it's available in PATH
-    # especially for other scripts that might not have the home bin in PATH
-    mkdir -p "$HOME/.local/bin"
-    if [ ! -f "$HOME/.local/bin/bun" ] && [ -f "$HOME/.bun/bin/bun" ]; then
-      ln -s "$HOME/.bun/bin/bun" "$HOME/.local/bin/bun" || true
-    fi
-    if [ ! -f "$HOME/.local/bin/bunx" ] && [ -f "$HOME/.bun/bin/bunx" ]; then
-      ln -s "$HOME/.bun/bin/bunx" "$HOME/.local/bin/bunx" || true
-    fi
   EOT
+  
   dir            = "/workspaces"
 
   # These environment variables allow you to make Git commits right away after creating a
@@ -432,6 +417,28 @@ resource "coder_agent" "main" {
     interval     = 10
     timeout      = 1
   }
+}
+
+resource "coder_script" "install_bun" {
+  agent_id     = coder_agent.main.id
+  display_name = "Install Bun"
+  icon         = "/icon/bun.png"
+  run_on_start = true
+  order        = 1
+
+  script = <<-EOT
+    #!/bin/bash
+    set -e
+
+    if ! command -v bun >/dev/null 2>&1; then
+      echo "Installing Bun..."
+      curl -fsSL https://bun.sh/install | bash
+      echo 'export BUN_INSTALL="$HOME/.bun"' >> ~/.bashrc
+      echo 'export PATH="$BUN_INSTALL/bin:$PATH"' >> ~/.bashrc
+    else
+      echo "Bun is already installed."
+    fi
+  EOT
 }
 
 # See https://registry.coder.com/modules/coder/code-server
