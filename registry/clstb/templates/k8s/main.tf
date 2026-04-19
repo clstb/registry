@@ -497,19 +497,15 @@ resource "coder_script" "install_forge_extension" {
   EOT
 }
 
-resource "coder_script" "forge_setup" {
-  agent_id     = coder_agent.main.id 
-  display_name = "Install & Configure Forge"
-  icon         = "/icon/terminal.svg"
-  run_on_start = true
+module "forge" {
+  count    = data.coder_workspace.me.start_count
+  source   = "../../modules/forge"
+  agent_id = coder_agent.main.id
+  folder   = "/workspaces"
 
-  script = <<SCRIPT
+  post_install_script = <<SCRIPT
 #!/bin/bash
 set -e
-
-# 1. Install ForgeCode
-echo "Installing Forge..."
-curl -fsSL https://forgecode.dev/install.sh | bash
 
 # 2. Create the configuration directory
 mkdir -p ~/.forge

@@ -71,6 +71,18 @@ variable "subdomain" {
   default     = false
 }
 
+variable "pre_install_script" {
+  type        = string
+  description = "Custom script to run before installing Forge."
+  default     = null
+}
+
+variable "post_install_script" {
+  type        = string
+  description = "Custom script to run after installing Forge."
+  default     = null
+}
+
 locals {
   app_slug        = "forge"
   install_script  = file("${path.module}/scripts/install.sh")
@@ -95,6 +107,8 @@ module "agentapi" {
   install_agentapi     = var.install_agentapi
   agentapi_version     = var.agentapi_version
   agentapi_subdomain   = var.subdomain
+  pre_install_script   = var.pre_install_script
+  post_install_script  = var.post_install_script
   start_script         = local.start_script
   folder               = local.folder
   install_script       = <<-EOT
