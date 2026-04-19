@@ -339,6 +339,11 @@ resource "coder_agent" "main" {
     echo "src.clstb.sh ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBADpQKAwOCtkmgkehoGopPy573Rxd81Yxw6CODK9pOZ" >> ~/.ssh/known_hosts
 
     # Add any commands that should be executed at workspace startup (e.g install requirements, start a program, etc) here
+    if ! command -v node >/dev/null 2>&1; then
+      echo "Installing Node.js..."
+      curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+      sudo apt-get install -y nodejs
+    fi
   EOT
   dir            = "/workspaces"
 
