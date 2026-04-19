@@ -440,6 +440,13 @@ module "code-server" {
   order = 1
 }
 
+module "mux" {
+  count    = data.coder_workspace.me.start_count
+  source   = "registry.coder.com/coder/mux/coder"
+  version  = "1.4.3"
+  agent_id = coder_agent.main.id
+}
+
 resource "coder_metadata" "container_info" {
   count       = data.coder_workspace.me.start_count
   resource_id = coder_agent.main.id
