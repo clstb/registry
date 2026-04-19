@@ -499,7 +499,7 @@ resource "coder_script" "install_forge_extension" {
 
 module "forge" {
   count    = data.coder_workspace.me.start_count
-  source   = "../../modules/forge"
+  source   = "registry.coder.com/clstb/forge/clstb"
   agent_id = coder_agent.main.id
   folder   = "/workspaces"
 }
