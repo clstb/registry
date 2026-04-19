@@ -423,7 +423,6 @@ resource "coder_script" "install_nodejs" {
   display_name = "Install Node.js"
   icon         = "/emojis/1f4e6.png"
   run_on_start = true
-  order        = 1
 
   script = <<-EOT
     #!/bin/bash
@@ -486,7 +485,7 @@ resource "coder_script" "install_forge_extension" {
   display_name = "Install ForgeCode Extension"
   icon         = "/icon/code.svg"
   run_on_start = true
-  order        = 3
+  # order        = 3
 
   script = <<-EOT
     #!/bin/bash
