@@ -86,14 +86,18 @@ if [ "${INSTALL_AGENTAPI}" = "true" ]; then
     --retry-all-errors \
     -L \
     -C - \
-    -o agentapi \
+    -o /tmp/agentapi \
     "$download_url"
-  chmod +x agentapi
-  sudo mv agentapi /usr/local/bin/agentapi
+  chmod +x /tmp/agentapi
+  sudo mv /tmp/agentapi /usr/local/bin/agentapi || (mkdir -p "$HOME/.local/bin" && mv /tmp/agentapi "$HOME/.local/bin/agentapi" && export PATH="$HOME/.local/bin:$PATH")
 fi
-if ! command_exists agentapi; then
+if ! command_exists agentapi && [ ! -f "$HOME/.local/bin/agentapi" ]; then
   echo "Error: AgentAPI is not installed. Please enable install_agentapi or install it manually."
   exit 1
+fi
+
+if [ -f "$HOME/.local/bin/agentapi" ]; then
+  export PATH="$HOME/.local/bin:$PATH"
 fi
 
 echo -n "${START_SCRIPT}" > "$module_path/scripts/agentapi-start.sh"
