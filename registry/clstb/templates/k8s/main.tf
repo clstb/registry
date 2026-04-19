@@ -185,6 +185,10 @@ locals {
       # 3. Symlink the user's Bun binary to the global PATH 
       # This ensures the 'mux' module immediately finds it without waiting for ~/.bashrc to load
       ln -s $WORKSPACE_HOME/.bun/bin/bun /usr/local/bin/bun
+
+      # 4. Install Node.js
+      curl -fsSL https://deb.nodesource.com/setup_lts.x | bash -
+      apt-get install -y nodejs
     EOT 
   }
 }
