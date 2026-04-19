@@ -337,13 +337,6 @@ resource "coder_agent" "main" {
     # Pre-populate known_hosts for internal Git server
     mkdir -p ~/.ssh
     echo "src.clstb.sh ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBADpQKAwOCtkmgkehoGopPy573Rxd81Yxw6CODK9pOZ" >> ~/.ssh/known_hosts
-
-    # Add any commands that should be executed at workspace startup (e.g install requirements, start a program, etc) here
-    if ! command -v node >/dev/null 2>&1; then
-      echo "Installing Node.js..."
-      curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
-      sudo apt-get install -y nodejs
-    fi
   EOT
   dir            = "/workspaces"
 
@@ -425,6 +418,24 @@ resource "coder_agent" "main" {
   }
 }
 
+resource "coder_script" "install_nodejs" {
+  agent_id     = coder_agent.main.id
+  display_name = "Install Node.js"
+  icon         = "/emojis/1f4e6.png"
+  run_on_start = true
+  order        = 1
+
+  script = <<-EOT
+    #!/bin/bash
+    set -e
+    if ! command -v node >/dev/null 2>&1; then
+      echo "Installing Node.js..."
+      curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+      sudo apt-get install -y nodejs
+    fi
+  EOT
+}
+
 # See https://registry.coder.com/modules/coder/code-server
 module "code-server" {
   count   = data.coder_workspace.me.start_count
@@ -442,7 +453,7 @@ module "code-server" {
     "workbench.colorTheme" = "Catppuccin Mocha"
     "security.workspace.trust.enabled" = false
   }
-  order = 1
+  order = 2
 }
 
 module "mux" {
@@ -450,6 +461,7 @@ module "mux" {
   source   = "registry.coder.com/coder/mux/coder"
   version  = "1.4.3"
   agent_id = coder_agent.main.id
+  order    = 2
 }
 
 resource "coder_metadata" "container_info" {
@@ -474,6 +486,7 @@ resource "coder_script" "install_forge_extension" {
   display_name = "Install ForgeCode Extension"
   icon         = "/icon/code.svg"
   run_on_start = true
+  order        = 3
 
   script = <<-EOT
     #!/bin/bash
