@@ -1,0 +1,21 @@
+# .crow.yml configuration for pushing templates to Coder
+# Coder instance: https://coder.clstb.sh
+# Access token secret: coder_token
+
+steps:
+  - name: push-templates
+    when:
+      event: [push, tag]
+    image: ghcr.io/coder/coder:latest
+    environment:
+      CODER_URL: https://code.clstb.sh
+      CODER_SESSION_TOKEN:
+        from_secret: coder_token
+    commands:
+      - |
+        for dir in ./registry/clstb/templates; do
+          if [ -d "$dir" ] && [ -f "$dir/main.tf" ]; then
+            echo "Pushing template: $dir"
+            coder templates push "$dir" --directory "$dir" --yes
+          fi
+        done
