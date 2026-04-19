@@ -141,6 +141,11 @@ module "agentapi" {
     set -o errexit
     set -o pipefail
 
+    # Ensure .local/bin exists and is in PATH for both forge and agentapi
+    # This avoids "Permission denied" when agentapi script tries to write to root-owned dirs
+    mkdir -p "$HOME/.local/bin"
+    export PATH="$HOME/.local/bin:$PATH"
+
     echo -n '${base64encode(local.install_script)}' | base64 -d > /tmp/install.sh
     chmod +x /tmp/install.sh
 

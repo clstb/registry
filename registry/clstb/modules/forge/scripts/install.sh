@@ -19,6 +19,9 @@ set +o nounset
 
 if [ "${ARG_INSTALL}" = "true" ]; then
   echo "Installing Forge..."
+  # Ensure .local/bin is in PATH for forge and agentapi
+  export PATH="$HOME/.local/bin:$PATH"
+
   if [ "${ARG_FORGE_VERSION}" = "latest" ]; then
     curl -fsSL https://forgecode.dev/install.sh | bash
   else
@@ -27,6 +30,8 @@ if [ "${ARG_INSTALL}" = "true" ]; then
   echo "Forge installed"
 else
   echo "Skipping Forge installation"
+  # Ensure .local/bin is in PATH even if not installing forge
+  export PATH="$HOME/.local/bin:$PATH"
 fi
 
 if command_exists forge; then
