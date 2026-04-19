@@ -117,10 +117,10 @@ locals {
 }
 
 module "agentapi" {
-module "agentapi" {
   source = "../../../coder/modules/agentapi"
 
   agent_id             = var.agent_id
+  web_app_slug         = local.app_slug
   web_app_order        = var.order
   web_app_group        = var.group
   web_app_icon         = var.icon
