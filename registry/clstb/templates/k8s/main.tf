@@ -453,6 +453,8 @@ module "mux" {
   agent_id = coder_agent.main.id
   order    = 2
   package_manager = "npm"
+  use_cached = "true"
+  additional_arguments = "--allow-http-origin"
 }
 
 resource "coder_metadata" "container_info" {
