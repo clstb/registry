@@ -173,11 +173,18 @@ locals {
     # addition to `/var/run`.
     # "ENVBUILDER_IGNORE_PATHS": "/product_name,/product_uuid,/var/run",
     "ENVBUILDER_SETUP_SCRIPT" : <<-EOT
-      # Install Bun (runs as root during envbuilder setup phase)
-      curl -fsSL https://bun.sh/install | bash
+      #!/bin/sh
       
-      # Symlink it so it's globally available in the PATH for the workspace user
-      ln -s /root/.bun/bin/bun /usr/local/bin/bun
+      # 1. Identify the default non-root user (usually UID 1000: coder, vscode, etc.)
+      WORKSPACE_USER=$(id -un 1000)
+      WORKSPACE_HOME=$(eval echo ~$WORKSPACE_USER)
+      
+      # 2. Run the Bun installer explicitly AS that user
+      su - $WORKSPACE_USER -c "curl -fsSL https://bun.sh/install | bash"
+      
+      # 3. Symlink the user's Bun binary to the global PATH 
+      # This ensures the 'mux' module immediately finds it without waiting for ~/.bashrc to load
+      ln -s $WORKSPACE_HOME/.bun/bin/bun /usr/local/bin/bun
     EOT 
   }
 }
