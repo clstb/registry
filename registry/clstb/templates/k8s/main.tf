@@ -342,7 +342,16 @@ resource "coder_agent" "main" {
     if ! command -v bun >/dev/null 2>&1; then
       echo "Installing bun..."
       curl -fsSL https://bun.sh/install | bash
-      export PATH="$HOME/.bun/bin:$PATH"
+    fi
+
+    # Symlink bun to ~/.local/bin so it's available in PATH
+    # especially for other scripts that might not have the home bin in PATH
+    mkdir -p "$HOME/.local/bin"
+    if [ ! -f "$HOME/.local/bin/bun" ] && [ -f "$HOME/.bun/bin/bun" ]; then
+      ln -s "$HOME/.bun/bin/bun" "$HOME/.local/bin/bun" || true
+    fi
+    if [ ! -f "$HOME/.local/bin/bunx" ] && [ -f "$HOME/.bun/bin/bunx" ]; then
+      ln -s "$HOME/.bun/bin/bunx" "$HOME/.local/bin/bunx" || true
     fi
   EOT
   dir            = "/workspaces"
