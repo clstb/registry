@@ -342,6 +342,7 @@ resource "coder_agent" "main" {
     if ! command -v bun >/dev/null 2>&1; then
       echo "Installing bun..."
       curl -fsSL https://bun.sh/install | bash
+      export PATH="$HOME/.bun/bin:$PATH"
     fi
   EOT
   dir            = "/workspaces"
