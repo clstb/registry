@@ -337,6 +337,12 @@ resource "coder_agent" "main" {
     # Pre-populate known_hosts for internal Git server
     mkdir -p ~/.ssh
     echo "src.clstb.sh ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBADpQKAwOCtkmgkehoGopPy573Rxd81Yxw6CODK9pOZ" >> ~/.ssh/known_hosts
+
+    # Install bun if not present
+    if ! command -v bun >/dev/null 2>&1; then
+      echo "Installing bun..."
+      curl -fsSL https://bun.sh/install | bash
+    fi
   EOT
   dir            = "/workspaces"
 
@@ -416,23 +422,6 @@ resource "coder_agent" "main" {
     interval     = 10
     timeout      = 1
   }
-}
-
-resource "coder_script" "install_nodejs" {
-  agent_id     = coder_agent.main.id
-  display_name = "Install Node.js"
-  icon         = "/emojis/1f4e6.png"
-  run_on_start = true
-
-  script = <<-EOT
-    #!/bin/bash
-    set -e
-    if ! command -v node >/dev/null 2>&1; then
-      echo "Installing Node.js..."
-      curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
-      sudo apt-get install -y nodejs
-    fi
-  EOT
 }
 
 # See https://registry.coder.com/modules/coder/code-server
