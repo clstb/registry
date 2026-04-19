@@ -424,7 +424,6 @@ resource "coder_script" "install_bun" {
   display_name = "Install Bun"
   icon         = "/icon/bun.png"
   run_on_start = true
-  order        = 1
 
   script = <<-EOT
     #!/bin/bash
