@@ -60,7 +60,7 @@ auto_open_dump = false
 max_conversations = 100
 max_sem_search_results = 100
 sem_search_top_k = 10
-services_url = "\${ARG_SERVICES_URL}"
+services_url = "${ARG_SERVICES_URL}"
 max_extensions = 15
 max_parallel_file_reads = 64
 model_cache_ttl_secs = 604800
@@ -111,7 +111,7 @@ accept_invalid_certs = false
 
 [session]
 provider_id = "openai_responses_compatible"
-model_id = "\${ARG_MODEL_ID}"
+model_id = "${ARG_MODEL_ID}"
 
 [updates]
 frequency = "daily"
@@ -135,10 +135,10 @@ cat <<EOF > "$HOME/.forge/.credentials.json"
   {
     "id": "openai_responses_compatible",
     "auth_details": {
-      "api_key": "\${ARG_API_KEY}"
+      "api_key": "${ARG_API_KEY}"
     },
     "url_params": {
-      "OPENAI_URL": "\${ARG_OPENAI_URL}"
+      "OPENAI_URL": "${ARG_OPENAI_URL}"
     }
   }
 ]
