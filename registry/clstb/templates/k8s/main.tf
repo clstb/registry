@@ -172,6 +172,13 @@ locals {
     # For example, when testing in KinD, it was necessary to set `/product_name` and `/product_uuid` in
     # addition to `/var/run`.
     # "ENVBUILDER_IGNORE_PATHS": "/product_name,/product_uuid,/var/run",
+    "ENVBUILDER_SETUP_SCRIPT" : <<-EOT
+      # Install Bun (runs as root during envbuilder setup phase)
+      curl -fsSL https://bun.sh/install | bash
+      
+      # Symlink it so it's globally available in the PATH for the workspace user
+      ln -s /root/.bun/bin/bun /usr/local/bin/bun
+    EOT 
   }
 }
 
@@ -419,27 +426,6 @@ resource "coder_agent" "main" {
   }
 }
 
-resource "coder_script" "install_bun" {
-  agent_id     = coder_agent.main.id
-  display_name = "Install Bun"
-  icon         = "/icon/bun.png"
-  run_on_start = true
-
-  script = <<-EOT
-    #!/bin/bash
-    set -e
-
-    if ! command -v bun >/dev/null 2>&1; then
-      echo "Installing Bun..."
-      curl -fsSL https://bun.sh/install | bash
-      echo 'export BUN_INSTALL="$HOME/.bun"' >> ~/.bashrc
-      echo 'export PATH="$BUN_INSTALL/bin:$PATH"' >> ~/.bashrc
-    else
-      echo "Bun is already installed."
-    fi
-  EOT
-}
-
 # See https://registry.coder.com/modules/coder/code-server
 module "code-server" {
   count   = data.coder_workspace.me.start_count
@@ -467,8 +453,6 @@ module "mux" {
   agent_id = coder_agent.main.id
   order    = 2
   package_manager = "bun"
-
-  depends_on = [coder_script.install_bun]
 }
 
 resource "coder_metadata" "container_info" {
