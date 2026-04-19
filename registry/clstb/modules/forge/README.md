@@ -12,8 +12,8 @@ Run the Forge agent in your workspace to generate code and perform tasks. This m
 
 ```tf
 module "forge" {
-  source         = "registry.coder.com/clstb/forge/coder"
-  version        = "1.0.0"
+  source         = "registry.coder.com/clstb/forge/clstb"
+  version        = "1.0.1"
   agent_id       = coder_agent.main.id
   folder         = "/home/coder/project"
 }
@@ -28,8 +28,8 @@ module "forge" {
 
 ```tf
 module "forge" {
-  source         = "registry.coder.com/clstb/forge/coder"
-  version        = "1.0.0"
+  source         = "registry.coder.com/clstb/forge/clstb"
+  version        = "1.0.1"
   agent_id       = coder_agent.main.id
   folder         = "/home/coder/project"
 }
