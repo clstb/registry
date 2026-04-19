@@ -467,6 +467,8 @@ module "mux" {
   agent_id = coder_agent.main.id
   order    = 2
   package_manager = "bun"
+
+  depends_on = [coder_script.install_bun]
 }
 
 resource "coder_metadata" "container_info" {
