@@ -450,6 +450,7 @@ module "mux" {
   version  = "1.4.3"
   agent_id = coder_agent.main.id
   order    = 2
+  package_manager = "bun"
 }
 
 resource "coder_metadata" "container_info" {
